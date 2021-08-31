@@ -2,6 +2,7 @@ import React from "react";
 import CurrencyItem from "./CurrencyItem";
 import currencies from "./currencies";
 import axios from "axios";
+const maximumAmount = 100_000_000
 
 class CurrenciesSelect extends React.Component {
   constructor() {
@@ -12,16 +13,23 @@ class CurrenciesSelect extends React.Component {
   handleChange() {
     const fromSelectValue = document.getElementById('from-currency').value;
     const toSelectValue = document.getElementById('to-currency').value;
-    const amount = document.getElementById('amount').value;
+    const amountInput = document.getElementById('amount')
+    const amountValue = amountInput.value;
     const responseRate = document.getElementById('convertion-response');
-    if (!amount || !fromSelectValue || !toSelectValue) return;
 
-    axios.post(process.env['REACT_APP_BACKEND_URL'], {currency_from: fromSelectValue, currency_to: toSelectValue, amount: amount})
+    if (!amountValue || !fromSelectValue || !toSelectValue) return;
+    if (parseInt(amountValue) >= maximumAmount) {
+      responseRate.textContent = 'amount is too high';
+      amountInput.value = maximumAmount - 1
+      return;
+    }
+
+    axios.post(process.env['REACT_APP_BACKEND_URL'], {currency_from: fromSelectValue, currency_to: toSelectValue, amount: amountValue})
       .then(response => {
         let formatterFrom = this.formatAmount(fromSelectValue);
         let formatterTo = this.formatAmount(toSelectValue);
 
-        const result = `${formatterFrom.format(amount)} = ${formatterTo.format(response['data'])}`;
+        const result = `${formatterFrom.format(amountValue)} = ${formatterTo.format(response['data'])}`;
 
         responseRate.textContent=result;
       }).catch(function(error) {
@@ -35,6 +43,7 @@ class CurrenciesSelect extends React.Component {
 
   formatAmount(currency) {
     return new Intl.NumberFormat('en-CA', {
+      maximumFractionDigits: 5,
       style: 'currency',
       currency: currency,
     });
