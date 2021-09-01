@@ -24,7 +24,7 @@ class CurrenciesSelect extends React.Component {
       return;
     }
 
-    axios.post(process.env['REACT_APP_BACKEND_URL'], {currency_from: fromSelectValue, currency_to: toSelectValue, amount: amountValue})
+    axios.get(process.env['REACT_APP_BACKEND_URL'], { params: { currency_from: fromSelectValue, currency_to: toSelectValue, amount: amountValue } })
       .then(response => {
         let formatterFrom = this.formatAmount(fromSelectValue);
         let formatterTo = this.formatAmount(toSelectValue);
