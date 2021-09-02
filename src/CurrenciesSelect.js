@@ -8,14 +8,18 @@ class CurrenciesSelect extends React.Component {
   constructor() {
     super();
     this.handleChange = this.handleChange.bind(this);
+    this.fromCurrency = React.createRef();
+    this.toCurrency = React.createRef();
+    this.amountInput = React.createRef();
+    this.responseRate = React.createRef();
   };
 
   handleChange() {
-    const fromSelectValue = document.getElementById('from-currency').value;
-    const toSelectValue = document.getElementById('to-currency').value;
-    const amountInput = document.getElementById('amount')
+    const fromSelectValue = this.fromCurrency.current.value;
+    const toSelectValue = this.toCurrency.current.value;
+    const amountInput = this.amountInput.current;
     const amountValue = amountInput.value;
-    const responseRate = document.getElementById('convertion-response');
+    const responseRate = this.responseRate.current;
 
     if (!amountValue || !fromSelectValue || !toSelectValue) return;
     if (parseInt(amountValue) >= maximumAmount) {
@@ -62,13 +66,13 @@ class CurrenciesSelect extends React.Component {
           <div className="container">
             <label>Amount</label>
             <div className="select-box">
-              <input id="amount" className="content" defaultValue="1" type="number" onChange={() => this.handleChange()} />
+              <input id="amount" ref={this.amountInput} className="content" defaultValue="1" type="number" onChange={() => this.handleChange()} />
             </div>
           </div>
           <div className="container">
             <label>From</label>
             <div className="select-box">
-              <select id="from-currency" className="content" onChange={() => this.handleChange()}>
+              <select id="from-currency" ref={this.fromCurrency} className="content" onChange={() => this.handleChange()}>
                 {currencyValues}
               </select>
             </div>
@@ -76,14 +80,14 @@ class CurrenciesSelect extends React.Component {
           <div className="container">
             <label>To</label>
             <div className="select-box">
-              <select id="to-currency" className="content" defaultValue="USD" onChange={() => this.handleChange()}>
+              <select id="to-currency" ref={this.toCurrency} className="content" defaultValue="USD" onChange={() => this.handleChange()}>
                 {currencyValues}
               </select>
             </div>
           </div>
         </div>
 
-        <p id="convertion-response"></p>
+        <p id="convertion-response" ref={this.responseRate}></p>
       </div>
     );
   }
