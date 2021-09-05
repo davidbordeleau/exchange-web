@@ -33,7 +33,7 @@ class CurrenciesSelect extends React.Component {
         let formatterFrom = this.formatAmount(fromSelectValue);
         let formatterTo = this.formatAmount(toSelectValue);
 
-        const result = `${formatterFrom.format(amountValue)} = ${formatterTo.format(response['data'])}`;
+        const result = `${formatterFrom.format(amountValue)} = ${formatterTo.format(response['data']['amount_result'])}`;
 
         responseRate.textContent=result;
       }).catch(function(error) {
